@@ -1,0 +1,76 @@
+﻿@model IEnumerable<WebApplication1.Models.RelatorioXModelView>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@*
+    Ref.: Merge de colunas
+    https://www.w3schools.com/tags/att_td_rowspan.asp
+*@
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+    @*Cabeçalho da tabela*@
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ListaCidades.First().Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ListaCidades.First().Total)
+        </th>
+
+        @foreach (var item in Model.First().ListaCidades.First().ListaDias)
+        {
+            <th>
+                @Html.DisplayFor(modelItem => item.Dia)
+            </th>
+        }
+    </tr>
+
+    @*Corpo da Tabela*@
+    @foreach (var estado in Model)
+    {
+        int qtdeCidade = estado.ListaCidades.Count();
+        string nomeEstado = "";
+
+        foreach (var cidade in estado.ListaCidades)
+        {
+            <tr>
+
+                @if (nomeEstado != estado.Estado)
+                {
+                    <td rowspan="@(qtdeCidade)">
+                        @Html.DisplayFor(modelItem => estado.Estado)
+                    </td>
+                    nomeEstado = estado.Estado;
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => cidade.Nome)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => cidade.Total)
+                </td>
+
+                @foreach (var dia in cidade.ListaDias)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => dia.Valor)
+                    </td>
+                }
+
+            </tr>
+        }
+    }
+
+</table>
